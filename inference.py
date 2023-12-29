@@ -48,7 +48,7 @@ def gkern(kernlen=21, nsig=3):
 class InferenceArgumentParser(Tap):
     segment_id: str ='4420'
     segment_path:str='/content/gdrive/MyDrive/modelmain/inference-in'
-    model_path:str= '/content/gdrive/MyDrive/modelmain/checkpoints/valid_new-valid_0_fr_i3depoch=4.ckpt'
+    model_path:str= '/content/gdrive/MyDrive/modelmain/checkpoints/valid_new-valid_0_fr_i3depoch=0.ckpt'
     out_path:str='/content/gdrive/MyDrive/modelmain/inference-out/'
     stride: int = 4
     start_idx:int=15
