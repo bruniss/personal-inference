@@ -57,11 +57,11 @@ class CFG:
     comp_name = 'bru-poly'
 
     # comp_dir_path = './'
-    comp_dir_path = '/content/gdrive/MyDrive/modelmain/train-in/'
-    comp_folder_name = '/content/gdrive/MyDrive/modelmain/train-in/'
+    comp_dir_path = '/content/gdrive/MyDrive/modelmain/'
+    comp_folder_name = '/content/gdrive/MyDrive/modelmain/'
     # comp_dataset_path = f'{comp_dir_path}datasets/{comp_folder_name}/'
-    comp_dataset_path = f'/content/gdrive/MyDrive/modelmain/train-in/'
-    checkpoint_path = '/content/gdrive/MyDrive/modelmain/checkpoints/outputs/bru-poly-models/first_new_loader/valid_new-valid_0_fr_i3depoch=1.ckpt'
+    comp_dataset_path = f'/content/gdrive/MyDrive/modelmain/'
+    checkpoint_path = '/content/gdrive/MyDrive/modelmain/checkpoints/valid_new-valid_0_fr_i3depoch=1.ckpt'
     exp_name = 'pretraining_all'
 
     # ============== pred target =============
@@ -77,8 +77,8 @@ class CFG:
     # ============== training cfg =============
     size = 64
     tile_size = 256
-    stride = 8
-    train_batch_size = 400 # 32
+    stride = 1
+    train_batch_size = 1024 # 32
     valid_batch_size = train_batch_size
     use_amp = True
 
@@ -92,7 +92,7 @@ class CFG:
     # lr = 1e-4 / warmup_factor
     lr = 2e-5
     # ============== fold =============
-    valid_id = 'new-valid'
+    valid_id = 'new-valid2'
 
     # objective_cv = 'binary'  # 'binary', 'multiclass', 'regression'
     metric_direction = 'maximize'  # maximize, 'minimize'
@@ -215,7 +215,7 @@ def read_image_mask(folder_path, fragment_id, start_idx=15, end_idx=45):
 
     for i in idxs:
         
-        image = cv2.imread(CFG.comp_dataset_path + f"training-in/{fragment_id}/layers/{i:02}.tif", 0)
+        image = cv2.imread(CFG.comp_dataset_path + f"train-in/{fragment_id}/layers/{i:02}.tif", 0)
 
         pad0 = (CFG.tile_size - image.shape[0] % CFG.tile_size)
         pad1 = (CFG.tile_size - image.shape[1] % CFG.tile_size)
@@ -231,9 +231,9 @@ def read_image_mask(folder_path, fragment_id, start_idx=15, end_idx=45):
             image=cv2.flip(image,0)
         images.append(image)
     images = np.stack(images, axis=2)
-    mask = cv2.imread(CFG.comp_dataset_path + f"training-in/{fragment_id}/inklabels.png", 0)
+    mask = cv2.imread(CFG.comp_dataset_path + f"train-in/{fragment_id}/inklabels.png", 0)
     # mask = np.pad(mask, [(0, pad0), (0, pad1)], constant_values=0)
-    fragment_mask=cv2.imread(CFG.comp_dataset_path + f"training-in/{fragment_id}/mask.png", 0)
+    fragment_mask=cv2.imread(CFG.comp_dataset_path + f"train-in/{fragment_id}/mask.png", 0)
     if fragment_id=='20230827161846':
         fragment_mask=cv2.flip(fragment_mask,0)
 
@@ -537,12 +537,12 @@ def scheduler_step(scheduler, avg_val_loss, epoch):
 
 fragment_id = CFG.valid_id
 
-valid_mask_gt = cv2.imread(CFG.comp_dataset_path + f"training-in/{fragment_id}/inklabels.png", 0)
+valid_mask_gt = cv2.imread(CFG.comp_dataset_path + f"train-in/{fragment_id}/inklabels.png", 0)
 # valid_mask_gt=cv2.resize(valid_mask_gt,(valid_mask_gt.shape[1]//2,valid_mask_gt.shape[0]//2),cv2.INTER_AREA)
 pred_shape=valid_mask_gt.shape
 torch.set_float32_matmul_precision('medium')
 
-fragments=['new-valid','3335-1']
+fragments=['new-valid2','3335-1']
 enc_i,enc,fold=0,'i3d',0
 for fid in fragments:
 
@@ -551,7 +551,7 @@ for fid in fragments:
     fragment_id = CFG.valid_id
     run_slug=f'training_scrolls_valid={fragment_id}_{CFG.size}x{CFG.size}_submissionlabels'
 
-    valid_mask_gt = cv2.imread(CFG.comp_dataset_path + f"training-in/{fragment_id}/inklabels.png", 0)
+    valid_mask_gt = cv2.imread(CFG.comp_dataset_path + f"train-in/{fragment_id}/inklabels.png", 0)
 
     pred_shape=valid_mask_gt.shape
     train_images, train_masks, valid_images, valid_masks, valid_xyxys = get_all_fragments_data(folder_path)
