@@ -11,6 +11,7 @@ from collections import OrderedDict
 
 
 class MaxPool3dSamePadding(nn.MaxPool3d):
+    
     def compute_pad(self, dim, s):
         if s % self.stride[dim] == 0:
             return max(self.kernel_size[dim] - self.stride[dim], 0)
