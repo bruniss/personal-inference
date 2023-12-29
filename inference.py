@@ -50,7 +50,7 @@ class InferenceArgumentParser(Tap):
     segment_path:str='/content/gdrive/MyDrive/modelmain/inference-in'
     model_path:str= '/content/gdrive/MyDrive/modelmain/checkpoints/valid_new-valid_0_fr_i3depoch=0.ckpt'
     out_path:str='/content/gdrive/MyDrive/modelmain/inference-out/'
-    stride: int = 4
+    stride: int = 8
     start_idx:int=15
     workers: int = 16
     batch_size: int = 1024
