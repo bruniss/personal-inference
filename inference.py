@@ -53,7 +53,7 @@ class InferenceArgumentParser(Tap):
     stride: int = 4
     start_idx:int=15
     workers: int = 16
-    batch_size: int = 512
+    batch_size: int = 1024
     size:int=64
     reverse:int=0
 args = InferenceArgumentParser().parse_args()
